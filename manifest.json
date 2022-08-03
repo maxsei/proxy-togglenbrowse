@@ -1,0 +1,18 @@
+{
+  "name": "Svelte Extension",
+  "short_name": "SVEX",
+  "version": "1.0",
+  "description": "A browser-extension template powered by Svelte",
+  "author": "Sean McPherson",
+  "permissions": ["storage"],
+  "browser_action": {
+    "default_popup": "dist/index.html",
+    "default_icon": {
+      "16": "dist/icon-16.png",
+      "32": "dist/icon-32.png",
+      "48": "dist/icon-48.png",
+      "128": "dist/icon-128.png"
+    }
+  },
+  "manifest_version": 2
+}
