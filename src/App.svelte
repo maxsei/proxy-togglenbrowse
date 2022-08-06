@@ -1,36 +1,59 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import { Router, Route, Link } from "svelte-routing";
   import browser from "webextension-polyfill";
 
-  import Home from "./pages/Home.svelte";
-  import Another from "./pages/Another.svelte";
-  import PopupButton from "./components/PopupButton.svelte";
-  import { BASE_PATH, ROUTES } from "./constants";
 
+  let proxyType = "none";
+  function getProxySettings(){
+    let proxySettings;
+    browser.proxy.settings.get({}).then((x) => {
+      proxySettings = x;
+    });
+    return proxySettings;
+  }
   onMount(async () => {
-    const result = await browser.storage.local.get();
-    console.log(result);
+    let proxySettings = getProxySettings();
+    proxyType = proxySettings.proxyType || "none";
   });
+  function handleClick(e){
+	console.log(e)
+  	if (proxyType === "none") {
+		proxyType = "manual";
+		return;
+	}
+	proxyType = "none";
+  };
 </script>
 
-<Router basepath={BASE_PATH}>
-  <div class="app">
-    <nav>
-      <Link to={ROUTES.TO_HOME}>Home</Link>
-      <Link to={ROUTES.ANOTHER}>Another</Link>
-      {#if !window.location.search.includes("popup=true")}
-        <PopupButton />
-      {/if}
-    </nav>
-    <Route path={ROUTES.ANOTHER}><Another /></Route>
-    <Route path={ROUTES.HOME}><Home /></Route>
-  </div>
-</Router>
+<div id="app">
+	<button id="toggle" class="proxytype-{proxyType}" on:click={handleClick}>
+		hello
+	</button>
+</div>
 
 <style>
-  .app {
+  #app {
     display: grid;
     grid-template-rows: 20px auto;
+    bottom: 0;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    font-size: 1rem;
+    margin: 0;
+    height: 400px;
+    width: 400px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+      Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  }
+  #toggle {
+  	
+  }
+  .proxytype-none {
+	  background-color: none,
+  }
+  .proxytype-manual {
+	  background-color: purple,
   }
 </style>
